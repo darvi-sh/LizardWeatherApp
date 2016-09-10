@@ -45,7 +45,8 @@ class CircularSlider extends Component {
     return (
       <Svg onLayout={this.onLayout} width={width} height={height}>
         <Circle cx={cx} cy={cy} r={r} stroke='#eee' strokeWidth={0.5} fill='none'/>
-        <Path stroke={meterColor} strokeWidth={5} fill='none' d='{`M${startCoord.x} ${startCoord.y} A ${r} ${r} 0 ${value>180?1:0} 1 ${endCoord.x} ${endCoord.y}`}'/>
+        <Path stroke={meterColor} strokeWidth={5} fill='none'
+          d={`M${startCoord.x} ${startCoord.y} A ${r} ${r} 0 ${value>180?1:0} 1 ${endCoord.x} ${endCoord.y}`}/>
         <G x={endCoord.x-7.5} y={endCoord.y-7.5}>
           <Circle cx={7.5} cy={7.5} r={10} fill={meterColor} {...this._panResponder.panHandlers}/>
           <Text key={value+''} x={7.5} y={1} fontSize={10} fill={textColor} textAnchor="middle">{value+''}</Text>

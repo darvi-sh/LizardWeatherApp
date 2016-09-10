@@ -1,0 +1,18 @@
+﻿Dear Sonny,
+
+Here is a bit of technical challenge 
+
+
+1- go to this link and answer the question  (https://www.interviewzen.com/apply/7KZc2k). please follow the instruction and answer in this platform and make sure you submit your answer.
+
+2- here is a simple design for a weather app.
+you need to make the exact front end using React native(as close as you can).
+
+requirements : 
+your app should get phone location and date and knowing location and date get the weather forecast  from  yahoo weather API (https://developer.yahoo.com/weather/)
+the little cycle and curved line below the screen allow user to slide the time and see 24 hours of weather.
+
+I know the fact that you are not experienced with react native but i like to see how fast and accurate you can adopt to new technologies.
+
+
+Please submit me your answers as soon as you can.

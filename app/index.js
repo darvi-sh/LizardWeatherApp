@@ -139,10 +139,10 @@ export default class LizardWeatherApp extends Component {
           {this.state.temperature}
         </Text>
 
-        <View style={styles.slider}>
+        {/*<View style={styles.slider}>
           <CircularSlider width={200} height={200} meterColor='#0cd' textColor='#fff'
             value={this.state.slider} onValueChange={(value)=>this.setState({slider:value})}/>
-        </View>
+        </View>*/}
 
         <SliderExample
           {...this.props}

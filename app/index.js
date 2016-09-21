@@ -9,7 +9,7 @@ import {
 
 // To be addressed after fixing react-native-svg package
 // https://github.com/steveliles/react-native-circular-slider-example
-import CircularSlider from './CircularSlider';
+// import CircularSlider from './CircularSlider';
 
 import { weatherIcon, windIcon } from "./icons";
 import moment from 'moment';
@@ -43,7 +43,6 @@ export default class LizardWeatherApp extends Component {
   }
 
   componentWillMount() {
-    this.fetchLocation();
   }
 
   componentDidMount() {
@@ -51,32 +50,34 @@ export default class LizardWeatherApp extends Component {
       date: moment().format('dddd, MMMM Do')
     });
 
-    setTimeout(() => {
-      this.fetchWeather();
-    }, 2000);
+    this.fetchWeather();
   }
 
   
   fetchLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const location = position.coords.latitude + ',' + position.coords.longitude;
-        this.setState({location});
-      },
-      // (error) => this.setState({ location: 37.30 + ', ' + 49.59}),
-      (error) => console.log(error.message),
-      {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
-    );
+    return new Promise(function(resolve) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = position.coords.latitude + ',' + position.coords.longitude;
+
+          resolve(location);
+        },
+        // (error) => this.setState({ location: 37.30 + ', ' + 49.59}),
+        (error) => console.log(error.message),
+        {enableHighAccuracy: false, timeout: 5000, maximumAge: 1000}
+      );
+    });
   }
 
 
-  fetchWeather() {
-    this.setState( { temperature: '...' } );
+  async fetchWeather() {
+    let location = await this.fetchLocation(); 
 
     // Fetching hourly forecast from forecast.io, because Yahoo Weather API doesn't provide hourly forecasts
-    fetch('https://api.forecast.io/forecast/8cf051db1c0b0c0ed2a2a06b29e0c8aa/' + this.state.location + ',' + this.state.startOfDay + '?exclude=[minutely,daily]')
+    fetch('https://api.forecast.io/forecast/8cf051db1c0b0c0ed2a2a06b29e0c8aa/' + location + ',' + this.state.startOfDay + '?exclude=[minutely,daily]')
       .then((response) => response.json())
       .then((responseJson) => {
+        this.setState( { temperature: '...' } );
         this.setState( { forecast: responseJson.hourly.data });
 
         const currentHourData = this.getCurrentHourData();
@@ -89,9 +90,11 @@ export default class LizardWeatherApp extends Component {
 
     // Fetching the city name from yahoo API, because forecast.io guys couldn't provide it due to licensing, they're working on it tho
     // Maybe I should've spent a bit of time for an API that provides both :p
-    fetch('https://query.yahooapis.com/v1/public/yql?q=select%20location%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text="(' + this.state.location + ')")&format=json')
+    
+    fetch('https://query.yahooapis.com/v1/public/yql?q=select%20location%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text="(' + location + ')")&format=json')
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log('city name', responseJson.city);
         this.setState( { location: responseJson.query.results.channel.location.city } );
       })
       .catch((error) => {
